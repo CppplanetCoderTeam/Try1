@@ -1,136 +1,52 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>中国珂学院</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.css">
-    <style type="text/css">
-        .hidden.menu {
-            display: none;
-        }
-        .masthead.segment {
-            min-height: 500px;
-            padding: 1em 0em;
-        }
-        .masthead .logo.item img {
-            margin-right: 1em;
-        }
-        .masthead .ui.menu .ui.button {
-            margin-left: 0.5em;
-        }
-        .masthead h1.ui.header {
-            margin-top: 1em;
-            margin-bottom: 0em;
-            font-size: 5em;
-            font-weight: normal;
-        }
-        .masthead h2 {
-            font-size: 1.7em;
-            font-weight: normal;
-        }
-        .ui.vertical.stripe {
-            padding: 8em 0em;
-        }
-        .ui.vertical.stripe h3 {
-            font-size: 2em;
-        }
-        .ui.vertical.stripe .button + h3,
-        .ui.vertical.stripe p + h3 {
-            margin-top: 3em;
-        }
-        .ui.vertical.stripe .floated.image {
-            clear: both;
-        }
-        .ui.vertical.stripe p {
-            font-size: 1.33em;
-        }
-        .ui.vertical.stripe .horizontal.divider {
-            margin: 3em 0em;
-        }
-        .quote.stripe.segment {
-            padding: 0em;
-        }
-        .quote.stripe.segment .grid .column {
-            padding-top: 5em;
-            padding-bottom: 5em;
-        }
-        .footer.segment {
-            padding: 5em 0em;
-        }
-        .secondary.pointing.menu .toc.item {
-            display: none;
-        }
-        @media only screen and (max-width: 700px) {
-            .ui.fixed.menu {
-                display: none !important;
-            }
-            .secondary.pointing.menu .item,
-            .secondary.pointing.menu .menu {
-                display: none;
-            }
-            .secondary.pointing.menu .toc.item {
-                display: block;
-            }
-            .masthead.segment {
-                min-height: 350px;
-            }
-            .masthead h1.ui.header {
-                font-size: 2em;
-                margin-top: 1.5em;
-            }
-            .masthead h2 {
-                margin-top: 0.5em;
-                font-size: 1.5em;
-            }
-        }
-    </style>
-</head>
 
-    <!-- Following Menu -->
-    <div class="ui large top fixed hidden menu">
-        <div class="ui container">
-            <a class="active item">中国珂学院</a>
-            <a class="item" target="_blank" href="https://www.nephren.ac.cn">奈芙莲分站</a>
-            <div class="right menu">
-                <div class="item">
-                    <a class="ui button" target="_blank" href="https://www.luogu.org">洛谷</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+    </head>
 
-    <!-- Page Contents -->
-    <div class="pusher">
-        <div class="ui inverted vertical masthead center aligned segment">
-            <div class="ui container">
-                <div class="ui large secondary inverted pointing menu">
-                    <a class="active item">Try2</a>
-                    <a class="item" target="_blank" href="https://cppplanet.github.io">Cppplanet</a>
-                    <div class="right item">
-                        <a class="ui inverted button" target="_blank" href="https://www.luogu.org">洛谷</a>
-                    </div>
-                </div>
-            </div>
+    <body>
+        用户名：<input type="text" name="" id="" value="" /> 密码：
+        <input type="password" name="" id="" value="" />
+        <input type="button" name="" id="btn" value="注册" />
+        <button type="button" id="clear">清除数据</button>
+    </body>
+    <script type="text/javascript">
+        var aInputs = document.getElementsByTagName('input');
+        var oClear = document.getElementById('clear');
+        var db = openDatabase('zuchedenglu', '1.0', 'textdb', '1024*1024');
+        db.transaction(function(contex) {
+            contex.executeSql('create table if not exists userinf(id unique,name,password)');
+        });
+        var oBtn = document.getElementById('btn');
+        var num = 0;
+        oBtn.onclick = function() {
+            if (aInputs[0].value && aInputs[1].value) {
+                db.transaction(function(contex) {
+                    contex.executeSql('select * from userinf', [], function(con, data) {
+                        var leg = data.rows.length,
+                            i;
+                        for (var i = 0; i < leg; i++) {
+                            if (aInputs[0].value == data.rows.item(i).name) {
+                                alert('该用户名已注册！');
+                                return;
+                            }
+                        }
+                        num =leg +1;
+                    });
+                    contex.executeSql('insert into userinf(id,name,password) values("' + num + '","' + aInputs[0].value + '","' + aInputs[1].value + '")');
+                    alert('注册成功');
+                });
+            } else {
+                alert('请填写完整的账号密码！');
+            }
+        }
+        oClear.onclick=function(){
+            db.transaction(function(contex) {
+                contex.executeSql('drop table userinf');
+            });
+        }
+    </script>
 
-            <div class="ui text container">
-                <h1 class="ui inverted header">Try2</h1>
-                <h1 style="font-size: 1.5em;">Cppplanet COder Team</h1>
-                <h1 style="font-size: 2em;">
-                    Chtholly Nota Seniorious
-                </h1>
-            </div>
-        </div><!--
-        -->
-<body>
-<form action="https://cppplanetcoderteam.github.io/Try2/">
-First name:<br>
-<input type="text" name="firstname" value="firstname">
-<br>
-Last name:<br>
-<input type="text" name="lastname" value="lastname">
-<br><br>
-<input type="submit" value="Submit">
-</form>
-  <script src="https://cdn.bootcss.com/jquery/3.3.1/core.js"></script>
-</body>
 </html>
